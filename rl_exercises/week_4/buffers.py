@@ -1,0 +1,73 @@
+from typing import Any, Dict, List, Tuple
+
+import numpy as np
+from rl_exercises.agent import AbstractBuffer
+
+
+class ReplayBuffer(AbstractBuffer):
+    """
+    Simple FIFO replay buffer.
+
+    Stores tuples of (state, action, reward, next_state, done, info),
+    and evicts the oldest when capacity is exceeded.
+    """
+
+    def __init__(self, capacity: int) -> None:
+        super().__init__()
+
+        self.capacity = capacity
+
+        self.states: List[np.ndarray] = []
+        self.actions: List[int] = []
+        self.rewards: List[float] = []
+        self.next_states: List[np.ndarray] = []
+        self.dones: List[bool] = []
+        self.infos: List[Dict] = []
+
+    def add(
+        self,
+        state: np.ndarray,
+        action: int | float,
+        reward: float,
+        next_state: np.ndarray,
+        done: bool,
+        info: dict,
+    ) -> None:
+        if len(self.states) >= self.capacity:
+            self.states.pop(0)
+            self.actions.pop(0)
+            self.rewards.pop(0)
+            self.next_states.pop(0)
+            self.dones.pop(0)
+            self.infos.pop(0)
+
+        self.states.append(state)
+        self.actions.append(int(action))
+        self.rewards.append(float(reward))
+        self.next_states.append(next_state)
+        self.dones.append(bool(done))
+        self.infos.append(info)
+
+    def sample(
+        self, batch_size: int = 32
+    ) -> List[Tuple[Any, Any, float, Any, bool, Dict]]:
+        idxs = np.random.choice(
+            len(self.states),
+            size=batch_size,
+            replace=False,
+        )
+
+        return [
+            (
+                self.states[i],
+                self.actions[i],
+                self.rewards[i],
+                self.next_states[i],
+                self.dones[i],
+                self.infos[i],
+            )
+            for i in idxs
+        ]
+
+    def __len__(self) -> int:
+        return len(self.states)
