@@ -1,0 +1,28 @@
+How Well Does HPO Generalize in RL?
+
+Generalization Setting
+
+The experiment investigates whether hyperparameters optimized on one random seed generalize to different random seeds. PPO was trained on the CartPole-v1 environment. A grid search was performed over three hyperparameters:
+
+- Actor learning rate: {1e-4, 5e-4, 1e-3}
+- Critic learning rate: {5e-4, 1e-3, 2e-3}
+- Batch size: {32, 64, 128}
+
+This resulted in 27 hyperparameter configurations. All configurations were evaluated using seed 0. The best-performing configuration was then tested on unseen seeds (1–4).
+
+Expectation
+
+I expected the optimized hyperparameters to generalize reasonably well across different random seeds because the environment and algorithm remain the same. However, I also expected some variation in performance due to the stochastic nature of reinforcement learning.
+
+Results
+
+The grid search found several configurations that achieved the maximum evaluation return of 500.0. The selected best configuration was then evaluated on seeds 1–4 and obtained the following returns:
+
+Seed 1: 455.4
+Seed 2: 232.0
+Seed 3: 500.0
+Seed 4: 311.0
+
+Observations
+
+The optimized hyperparameters generalized reasonably well to unseen random seeds, achieving high performance on multiple seeds. However, the results also showed noticeable variation between seeds, with returns ranging from 232.0 to 500.0. This indicates that random initialization and environment stochasticity still have a significant impact on reinforcement learning performance. Overall, the experiment matched the expectation that good hyperparameters generalize across seeds, while performance differences due to randomness remain.

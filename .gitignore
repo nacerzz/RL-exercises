@@ -143,3 +143,4 @@ rl_exercises/week_2/figures/mars_rover.png
 results/
 
 !rl_exercises/week_8/Results/*.png
+!rl_exercises/week_10/Results/
